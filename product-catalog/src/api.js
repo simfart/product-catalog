@@ -1,7 +1,7 @@
 import axios from "axios";
 import md5 from "md5";
 
-const BASEURL = "http://api.valantis.store:40000/";
+const BASEURL = "https://api.valantis.store:41000/";
 const PASSWORD = "Valantis";
 const timestamp = new Date().toISOString().split("T")[0].replace(/-/g, "");
 
@@ -10,26 +10,19 @@ const api = axios.create({
   headers: { "X-Auth": md5(`${PASSWORD}_${timestamp}`) },
 });
 
-export const getProducts = async () =>
+export const getItems = async (offset) =>
   await api
     .post("/", {
       action: "get_ids",
-      params: { offset: 10, limit: 3 },
+      params: { offset, limit: 10 },
     })
-    .then((res) => res.data)
-    .then((res) => console.log(res))
-    .catch(function (error) {
-      console.log(error);
-    });
-
-api.interceptors.response.use(
-  (response) => response,
-  async (error) => {
-    const originalRequest = error.config;
-    if (error.response.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
-    }
-
-    return Promise.reject(error);
-  }
-);
+    .then(async (getIds) => {
+      return await api
+        .post("/", {
+          action: "get_items",
+          params: { ids: getIds.data.result },
+        })
+        .then((res) => res.data.result)
+        .catch((err) => console.log(err));
+    })
+    .catch((err) => console.log(err));

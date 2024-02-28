@@ -1,25 +1,23 @@
-import { useProducts } from "../hooks/useProducts";
+
 import { useMemo } from "react";
+import { useItems } from "../hooks/useItems";
+import { Loader } from "../loader/Loader";
 
 export const ProductList = () => {
-  const { data: products } = useProducts();
-  console.log("products", products);
+  
+  const {data: items, isLoading, isFetching}  = useItems(10)
 
   const productList = useMemo(() => {
-    if (products) {
-      return products.toReversed().map((card) => (
-        <div key={Object.keys(card)}>{card} </div>
-        // <Card
-        //   //   onCardClick={onCardClick}
-        //   //   onCardLike={onCardLike}
-        //   //   onCardDelete={onCardDelete}
-        //   card={card}
-        //   key={card._id}
-        // />
+    if (items) {
+      return items.toReversed().map((card, index) => (
+        <div key={index}>{card.price} </div>
+   
       ));
     }
     return null;
-  }, [products]);
+  }, [items]);
+
+if (isLoading||isFetching) return <Loader/>
 
   return <section>{productList}</section>;
 };
