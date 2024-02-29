@@ -1,18 +1,31 @@
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useItems } from "../hooks/useItems";
 import { Loader } from "../loader/Loader";
 import { Pagination } from "../pagination";
+import { Filter } from "../filter/Filter";
+
 
 export const ProductList = () => {
   const [currentPage, setCurrentPage] = useState(1);
-  const [offset, setОffset] = useState(10 * currentPage);
+  const [offset, setOffset] = useState(10);
 
-  console.log("offset", offset);
+  const handlePrevClick = useCallback(() => {
+    if (currentPage !== 1) {
+      setCurrentPage((page) => page - 1);
+      setOffset(currentPage*10)
+    }
+  }, [currentPage, setCurrentPage]);
+
+  const handleNextClick = useCallback(() => {
+    setCurrentPage((page) => page +1);
+    setOffset(currentPage*10)
+  }, [currentPage]);
+
+
 
   const { data: items, isLoading, isFetching } = useItems(offset);
-  const [activePage, setActivePage] = useState(1);
+ 
 
-  console.log(items);
 
   const productList = useMemo(() => {
     if (items) {
@@ -28,7 +41,8 @@ export const ProductList = () => {
   return (
     <section>
       {productList}
-      <Pagination currentPage={currentPage} setActivePage={setActivePage} />
+      <Pagination currentPage={currentPage} handleNextClick={handleNextClick} handlePrevClick={handlePrevClick} />
+      <Filter/>
     </section>
   );
 };

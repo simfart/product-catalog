@@ -26,3 +26,31 @@ export const getItems = async (offset) =>
         .catch((err) => console.log(err));
     })
     .catch((err) => console.log(err));
+
+export const getFields = async (field) => {
+  return await api
+    .post(`/`, {
+      action: "get_fields",
+      params: { field: field },
+    })
+    .then((res) => res.data.result)
+    .catch((err) => console.log(err));
+};
+
+export const filterItems = async (payload) => {
+  return await api
+    .post(`/`, {
+      action: "filter",
+      params: payload,
+    })
+    .then(async (getIds) => {
+      return await api
+        .post("/", {
+          action: "get_items",
+          params: { ids: getIds.data.result },
+        })
+        .then((res) => res.data.result)
+        .catch((err) => console.log(err));
+    })
+    .catch((err) => console.log(err));
+};
