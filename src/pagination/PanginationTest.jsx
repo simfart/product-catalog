@@ -1,23 +1,30 @@
 import { useState } from "react";
 import { useQuery } from "react-query";
 import { getIds, getItems } from "../api";
+import { useIds } from "../hooks/useIds";
+// import { useItems } from "../hooks/useItems";
 
 export const PanginationTest = () => {
   const [page, setPage] = useState(1);
 
-  const useIds = (page) => {
+
+  const  idsInitialData = useIds(page)
+  const [ids, setIds] = useState(idsInitialData)
+
+
+ const useItems = (ids) => {
     return useQuery(
-      ["items", page],
-      async () => {
-        const data = await getIds(page);
-        const dataItems = getItems(data);
+      ["items", ids],
+      async () => {       
+        const dataItems = await getItems(ids);
         return dataItems;
       },
       { keepPreviousData: true }
     );
   };
 
-  const { data, isLoading, isError, error, isFetching } = useIds(page);
+  const { data, isLoading, isError, error, isFetching } = useItems(idsInitialData.data);
+  console.log(idsInitialData.data)
 
   if (isLoading) {
     return <h2>Loading...</h2>;
