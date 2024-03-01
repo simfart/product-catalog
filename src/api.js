@@ -10,22 +10,40 @@ const api = axios.create({
   headers: { "X-Auth": md5(`${PASSWORD}_${timestamp}`) },
 });
 
-export const getItems = async (offset) =>
+export const getIds = async (page) =>
   await api
     .post("/", {
       action: "get_ids",
-      params: { offset, limit: 10 },
+      params: { offset: page * 10, limit: 10 },
     })
-    .then(async (getIds) => {
-      return await api
-        .post("/", {
-          action: "get_items",
-          params: { ids: getIds.data.result },
-        })
-        .then((res) => res.data.result)
-        .catch((err) => console.log(err));
-    })
+    .then((res) => res.data.result)
     .catch((err) => console.log(err));
+
+export const getItems = async (idsData) =>
+  await api
+    .post("/", {
+      action: "get_items",
+      params: { ids: idsData },
+    })
+    .then((res) => res.data.result)
+    .catch((err) => console.log(err));
+
+// export const getItems = async (offset) =>
+//   await api
+//     .post("/", {
+//       action: "get_ids",
+//       params: { offset, limit: 10 },
+//     })
+//     .then(async (getIds) => {
+//       return await api
+//         .post("/", {
+//           action: "get_items",
+//           params: { ids: getIds.data.result },
+//         })
+//         .then((res) => res.data.result)
+//         .catch((err) => console.log(err));
+//     })
+//     .catch((err) => console.log(err));
 
 export const getFields = async (field) => {
   return await api
