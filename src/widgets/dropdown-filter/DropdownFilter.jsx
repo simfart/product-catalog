@@ -6,7 +6,6 @@ import { useGetFields } from "../../entities/hooks";
 
 export const DropdownFilter = () => {
   const [filter, setFilter] = useState("");
-  const [brands, setBrands] = useState([]);
 
   const handleChangeFilter = (event) => {
     setFilter(event.target.value);
@@ -17,41 +16,42 @@ export const DropdownFilter = () => {
   //   console.log(brandData)
   //   },[])
 
-  const { data, isLoading, isFetching } = useGetFields("brand");
+  const { data: brandData, isLoading, isFetching } = useGetFields("brand");
 
-  console.log(data);
+  const [brands, setBrands] = useState([]);
 
-  const filtered = useCallback(async () => {
-    const set = await new Set(data);
-    let item = set.values();
-    return Array.from(item);
-  }, [data]);
+  useState(async () => {
+    if (brandData) {
+      const filter = () => {
+        const set = new Set(brandData);
+        let item = set.values();
+        return Array.from(item);
+      };
+      setBrands(filter());
+    }
+  }, []);
 
-  const filteredItems = filtered();
-  console.log(filteredItems);
+  console.log(brands);
 
-  const brandFields = useMemo(() => {
-    return data.map((formKey) => {
-      return (
-        <option value={formKey} key={formKey}>
-          {formKey}
-        </option>
-      );
-    });
-  }, [filteredItems]);
+  //   const brandFields = useMemo(() => {
+  //     return brands.map((formKey) => {
+  //       return (
+  //         <option value={formKey} key={formKey}>
+  //           {formKey}
+  //         </option>
+  //       );
+  //     });
+  //   }, [brands]);
 
   return (
     <div>
       <label htmlFor="filter">Brand </label>
       <select name="filter" value={filter} onChange={handleChangeFilter}>
-        {/* {brandFields} */}
         <option value="">-- Please Select --</option>
         <option value="name">Name</option>
         <option value="date">Date</option>
         <option value="category">Category</option>
       </select>
-      <div>{isFetching ? "Fetching..." : null}</div>
-      <div>{isLoading ? "Loading..." : null}</div>
     </div>
   );
 };
