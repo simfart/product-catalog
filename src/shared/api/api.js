@@ -17,7 +17,7 @@ export const getIds = async (page) =>
       params: { offset: page * 10, limit: 10 },
     })
     .then((res) => res.data.result)
-    .catch((err) => console.log(err));
+    .catch((err) => console.log(err?.message));
 
 export const getItems = async (idsData) =>
   await api
@@ -26,24 +26,7 @@ export const getItems = async (idsData) =>
       params: { ids: idsData },
     })
     .then((res) => res.data.result)
-    .catch((err) => console.log(err));
-
-// export const getItems = async (offset) =>
-//   await api
-//     .post("/", {
-//       action: "get_ids",
-//       params: { offset, limit: 10 },
-//     })
-//     .then(async (getIds) => {
-//       return await api
-//         .post("/", {
-//           action: "get_items",
-//           params: { ids: getIds.data.result },
-//         })
-//         .then((res) => res.data.result)
-//         .catch((err) => console.log(err));
-//     })
-//     .catch((err) => console.log(err));
+    .catch((err) => console.log(err?.message));
 
 export const getFields = async (field) => {
   return await api
@@ -52,7 +35,7 @@ export const getFields = async (field) => {
       params: { field: field },
     })
     .then((res) => res.data.result)
-    .catch((err) => console.log(err));
+    .catch((err) => console.log(err?.message));
 };
 
 export const filterItems = async (payload) => {
@@ -68,7 +51,7 @@ export const filterItems = async (payload) => {
           params: { ids: getIds.data.result },
         })
         .then((res) => res.data.result)
-        .catch((err) => console.log(err));
+        .catch((err) => console.log(err?.message));
     })
-    .catch((err) => console.log(err));
+    .catch((err) => console.log(err?.message));
 };

@@ -1,5 +1,5 @@
 import { useQuery } from "react-query";
-import { getFields } from "../api";
+import { getFields } from "../../shared/api";
 
 export const useGetFields = (field) => {
   return useQuery(
@@ -8,6 +8,12 @@ export const useGetFields = (field) => {
       const dataFields = getFields(field);
       return dataFields;
     },
-    { keepPreviousData: true }
+    { keepPreviousData: true },
+    {
+      retry: 3,
+      onError: (error) => {
+        console.log(error);
+      },
+    }
   );
 };
