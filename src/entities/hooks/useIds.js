@@ -1,15 +1,15 @@
-import { useMutation, useQueryClient } from "react-query";
-import { getIds } from "../../shared/api";
-import { useMemo } from "react";
+import { useMutation, useQueryClient } from 'react-query';
+import { requestIds } from '../../shared/api';
+import { useMemo } from 'react';
 
 export const useIds = () => {
   const queryClient = useQueryClient();
 
   const { mutate, isLoading } = useMutation(
-    getIds,
+    requestIds,
     {
       onSuccess: () => {
-        queryClient.invalidateQueries(["dataIds"]);
+        queryClient.invalidateQueries(['dataIds']);
       },
     },
     {
@@ -18,7 +18,7 @@ export const useIds = () => {
         console.log(error);
       },
     },
-    { keepPreviousData: true }
+    { keepPreviousData: true },
   );
   return useMemo(() => ({ mutate, isLoading }), [mutate, isLoading]);
 };

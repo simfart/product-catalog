@@ -1,11 +1,11 @@
-import { useQuery } from "react-query";
-import { getFields } from "../../shared/api";
+import { useQuery } from 'react-query';
+import { requestFields } from '../../shared/api';
 
 export const useGetFields = (field) => {
   return useQuery(
-    ["fields", field],
+    ['fields', field],
     async () => {
-      const dataFields = getFields(field);
+      const dataFields = requestFields(field);
       return dataFields;
     },
     { keepPreviousData: true },
@@ -14,6 +14,6 @@ export const useGetFields = (field) => {
       onError: (error) => {
         console.log(error);
       },
-    }
+    },
   );
 };

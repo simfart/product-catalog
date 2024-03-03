@@ -1,23 +1,25 @@
-import { useMutation, useQueryClient } from "react-query";
-import { getItems } from "../../shared/api";
-import { useMemo } from "react";
+import { useState } from 'react';
+import { requestItems, requestIds } from '../../shared/api';
+import { useQuery } from 'react-query';
 
 export const useItems = () => {
-  const queryClient = useQueryClient();
+  const [page, setPage] = useState(1);
 
-  const { mutate, isLoading } = useMutation(
-    getItems,
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries(["items"]);
-      },
+  const incrementPage = () => setPage((prev) => prev + 1);
+  const decrementPage = () => setPage((prev) => Math.max(prev - 1, 0));
+
+  const { data: items, isLoading } = useQuery(
+    ['items', page],
+    async () => {
+      const dataIds = await requestIds(page);
+
+      return await requestItems(dataIds);
     },
     {
       retry: 3,
-      onError: (error) => {
-        console.log(error);
-      },
-    }
+      retryDelay: (attempt) => Math.pow(2, attempt) * 1000,
+    },
   );
-  return useMemo(() => ({ mutate, isLoading }), [mutate, isLoading]);
+
+  return { page, items, isLoading, incrementPage, decrementPage };
 };

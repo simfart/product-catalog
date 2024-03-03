@@ -1,34 +1,53 @@
-import { useEffect, useState } from "react";
-import { usePangination, useItems, useIds } from "../../entities/hooks";
-import { FilterItems } from "../../widgets/filter-items";
+import { useFilteredItems, useItems } from '../../entities/hooks';
+import { FilterItems } from '../../widgets/filter-items';
+import { useState } from 'react';
 
 export const ItemList = () => {
-  const [page, setPage] = useState(1);
-  const { data, isFetching } = usePangination(page);
+  const [isFilteredItemsShow, setIsFilteredItemsShow] = useState(false);
+  const toggleFilteredItemsShow = () => setIsFilteredItemsShow((prev) => !prev);
+  const showFilteredItems = () => setIsFilteredItemsShow(true);
+  const hideFilteredItems = () => setIsFilteredItemsShow(false);
 
-  const { mutate, isLoading } = useItems();
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    mutate(page);
-  };
+  const {
+    items,
+    isLoading: isItemsLoading,
+    page,
+    incrementPage,
+    decrementPage,
+  } = useItems();
+  const { filteredItems, isLoading: isFilteredItemsLoading } =
+    useFilteredItems();
 
   return (
     <div>
-      <FilterItems />
+      <FilterItems showFilteredItems={showFilteredItems} />
 
-      {data && (
-        <div className="card">
-          {data?.map((item, index) => (
-            <div key={index}>{item.product} </div>
-          ))}
-        </div>
-      )}
+      {isFilteredItemsShow
+        ? filteredItems && (
+            <div className="card">
+              {filteredItems?.map((item) => (
+                <div key={item.id}>
+                  {item.brand + item.price + item.product}{' '}
+                </div>
+              ))}
+            </div>
+          )
+        : items && (
+            <div className="card">
+              {items?.map((item) => (
+                <div key={item.id}>
+                  {' '}
+                  {item.brand + item.price + item.product}{' '}
+                </div>
+              ))}
+            </div>
+          )}
       <div className="nav btn-container">
         <button
           onClick={() => {
-            setPage((prevState) => Math.max(prevState - 1, 0));
-            handleSubmit;
+            decrementPage();
+
+            hideFilteredItems();
           }}
           disabled={page === 1}
         >
@@ -37,16 +56,17 @@ export const ItemList = () => {
 
         <button
           onClick={() => {
-            setPage((prevState) => prevState + 1);
-            handleSubmit;
+            incrementPage();
+
+            hideFilteredItems();
           }}
         >
           Next Page
         </button>
       </div>
 
-      <div>{isFetching ? "Fetching..." : null}</div>
-      <div>{isLoading ? "Loading..." : null}</div>
+      <div>{isItemsLoading ? 'Fetching items...' : null}</div>
+      <div>{isFilteredItemsLoading ? 'Fetching filtered items...' : null}</div>
     </div>
   );
 };

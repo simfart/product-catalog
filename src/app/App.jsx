@@ -8,9 +8,7 @@ export const  App = () => {
   return (
     <QueryClientProvider>
       <ReactQueryDevtools initialIsOpen={true} />
-     <ItemList/>    
+      <ItemList/>    
     </QueryClientProvider>
   );
 }
-
-
