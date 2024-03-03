@@ -1,8 +1,6 @@
-import { useState } from "react";
-import { usePangination, useItems } from "../../entities/hooks";
+import { useEffect, useState } from "react";
+import { usePangination, useItems, useIds } from "../../entities/hooks";
 import { FilterItems } from "../../widgets/filter-items";
-
-
 
 export const ItemList = () => {
   const [page, setPage] = useState(1);
@@ -17,7 +15,7 @@ export const ItemList = () => {
 
   return (
     <div>
-     <FilterItems/>
+      <FilterItems />
 
       {data && (
         <div className="card">

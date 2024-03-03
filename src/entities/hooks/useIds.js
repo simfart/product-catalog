@@ -17,7 +17,8 @@ export const useIds = () => {
       onError: (error) => {
         console.log(error);
       },
-    }
+    },
+    { keepPreviousData: true }
   );
   return useMemo(() => ({ mutate, isLoading }), [mutate, isLoading]);
 };

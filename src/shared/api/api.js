@@ -34,8 +34,11 @@ export const getFields = async (field) => {
       action: "get_fields",
       params: { field: field },
     })
-    .then((res) => res.data.result)
-    .catch((err) => console.log(err?.message));
+    .then((res) =>
+      res.data.result.filter(
+        (value, index, array) => array.indexOf(value) === index
+      )
+    );
 };
 
 export const filterItems = async (payload) => {

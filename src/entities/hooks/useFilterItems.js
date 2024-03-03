@@ -9,7 +9,7 @@ export const useFilterItems = () => {
     filterItems,
     {
       onSuccess: () => {
-        queryClient.invalidateQueries(["dataIds"]);
+        queryClient.invalidateQueries(["items"]);
       },
     },
     {
