@@ -7,14 +7,17 @@ const timestamp = new Date().toISOString().split('T')[0].replace(/-/g, '');
 
 const api = axios.create({
   baseURL: BASEURL,
-  headers: { 'X-Auth': md5(`${PASSWORD}_${timestamp}`) },
+  headers: {
+    'X-Auth': md5(`${PASSWORD}_${timestamp}`),
+    'Content-Type': 'application/json',
+  },
 });
 
 export const requestIds = async (page) =>
   await api
     .post('/', {
       action: 'get_ids',
-      params: { offset: page * 10, limit: 10 },
+      params: { offset: page * 50, limit: 50 },
     })
     .then((res) => res.data.result);
 
@@ -24,7 +27,13 @@ export const requestItems = async (idsData) =>
       action: 'get_items',
       params: { ids: idsData },
     })
-    .then((res) => res.data.result);
+    .then((res) => {
+      const items = res.data.result;
+      const unique = items.filter((obj, index) => {
+        return index === items.findIndex((o) => obj.id === o.id);
+      });
+      return unique;
+    });
 
 export const requestFields = async (field) => {
   return await api
@@ -34,7 +43,8 @@ export const requestFields = async (field) => {
     })
     .then((res) =>
       res.data.result.filter(
-        (value, index, array) => array.indexOf(value) === index,
+        (value, index, array) =>
+          array.indexOf(value) === index && value !== null,
       ),
     );
 };

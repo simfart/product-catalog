@@ -3,7 +3,7 @@ import { requestItems, requestIds } from '../../shared/api';
 import { useQuery } from 'react-query';
 
 export const useItems = () => {
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(0);
 
   const incrementPage = () => setPage((prev) => prev + 1);
   const decrementPage = () => setPage((prev) => Math.max(prev - 1, 0));

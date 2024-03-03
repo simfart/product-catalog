@@ -22,14 +22,3 @@ export const useIds = () => {
   );
   return useMemo(() => ({ mutate, isLoading }), [mutate, isLoading]);
 };
-
-// export const useIds = (page) => {
-//   return useQuery(
-//     ["dataIds", page],
-//     async () => {
-//       const dataIds = await getIds(page);
-//       return dataIds;
-//     },
-//     { keepPreviousData: true }
-//   );
-// };

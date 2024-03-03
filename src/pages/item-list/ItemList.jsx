@@ -4,7 +4,6 @@ import { useState } from 'react';
 
 export const ItemList = () => {
   const [isFilteredItemsShow, setIsFilteredItemsShow] = useState(false);
-  const toggleFilteredItemsShow = () => setIsFilteredItemsShow((prev) => !prev);
   const showFilteredItems = () => setIsFilteredItemsShow(true);
   const hideFilteredItems = () => setIsFilteredItemsShow(false);
 
@@ -20,7 +19,10 @@ export const ItemList = () => {
 
   return (
     <div>
-      <FilterItems showFilteredItems={showFilteredItems} />
+      <FilterItems
+        showFilteredItems={showFilteredItems}
+        hideFilteredItems={hideFilteredItems}
+      />
 
       {isFilteredItemsShow
         ? filteredItems && (
@@ -33,37 +35,23 @@ export const ItemList = () => {
             </div>
           )
         : items && (
-            <div className="card">
-              {items?.map((item) => (
-                <div key={item.id}>
-                  {' '}
-                  {item.brand + item.price + item.product}{' '}
-                </div>
-              ))}
-            </div>
+            <>
+              <div className="card">
+                {items?.map((item) => (
+                  <div key={item.id}>
+                    {' '}
+                    {item.brand + item.price + item.product}{' '}
+                  </div>
+                ))}
+              </div>
+              <div className="nav btn-container">
+                <button onClick={() => decrementPage()} disabled={page === 1}>
+                  Prev Page
+                </button>
+                <button onClick={() => incrementPage()}>Next Page</button>
+              </div>
+            </>
           )}
-      <div className="nav btn-container">
-        <button
-          onClick={() => {
-            decrementPage();
-
-            hideFilteredItems();
-          }}
-          disabled={page === 1}
-        >
-          Prev Page
-        </button>
-
-        <button
-          onClick={() => {
-            incrementPage();
-
-            hideFilteredItems();
-          }}
-        >
-          Next Page
-        </button>
-      </div>
 
       <div>{isItemsLoading ? 'Fetching items...' : null}</div>
       <div>{isFilteredItemsLoading ? 'Fetching filtered items...' : null}</div>
