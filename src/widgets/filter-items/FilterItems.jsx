@@ -34,7 +34,6 @@ export const FilterItems = ({ showFilteredItems, hideFilteredItems }) => {
       e.preventDefault();
       fetchFilteredItems();
       showFilteredItems();
-      document.getElementById('myDropdown').selectedIndex = -1;
     },
     [fetchFilteredItems, showFilteredItems],
   );
@@ -85,7 +84,6 @@ export const FilterItems = ({ showFilteredItems, hideFilteredItems }) => {
                   value={values.brand || ''}
                   onChange={handleChange}
                   className="filter_input"
-                  id="myDropdown"
                 >
                   <DropdownFilter brandData={data} />
                 </select>
