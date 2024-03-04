@@ -1,7 +1,7 @@
 import { useCallback, useRef, useState } from 'react';
 import { useForm, useFilteredItems, useGetFields } from '../../entities/hooks';
 import { DropdownFilter } from '../dropdown-filter';
-import { RadioButton } from '../../shared/radioButton';
+import { RadioButton } from '../../shared/radio-button';
 
 export const FilterItems = ({ showFilteredItems, hideFilteredItems }) => {
   const {

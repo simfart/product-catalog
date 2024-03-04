@@ -1,6 +1,9 @@
 import { useFilteredItems, useItems } from '../../entities/hooks';
 import { FilterItems } from '../../widgets/filter-items';
 import { useState } from 'react';
+import { Card } from '../../shared/card';
+
+import './ItemList.scss';
 
 export const ItemList = () => {
   const [isFilteredItemsShow, setIsFilteredItemsShow] = useState(false);
@@ -18,7 +21,7 @@ export const ItemList = () => {
     useFilteredItems();
 
   return (
-    <div>
+    <div className="container">
       <FilterItems
         showFilteredItems={showFilteredItems}
         hideFilteredItems={hideFilteredItems}
@@ -26,7 +29,7 @@ export const ItemList = () => {
 
       {isFilteredItemsShow
         ? filteredItems && (
-            <div className="card">
+            <div className="cards">
               {filteredItems?.map((item) => (
                 <div key={item.id}>
                   {item.brand + item.price + item.product}{' '}
@@ -36,11 +39,10 @@ export const ItemList = () => {
           )
         : items && (
             <>
-              <div className="card">
+              <div className="cards">
                 {items?.map((item) => (
                   <div key={item.id}>
-                    {' '}
-                    {item.brand + item.price + item.product}{' '}
+                    <Card card={item} />
                   </div>
                 ))}
               </div>
