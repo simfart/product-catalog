@@ -1,7 +1,7 @@
 import { useFilteredItems, useItems } from '../../entities/hooks';
 import { FilterItems } from '../../widgets/filter-items';
 import { useState } from 'react';
-import { Card } from '../../shared/card';
+import { Table } from '../../shared/table';
 
 import './ItemList.scss';
 
@@ -21,42 +21,27 @@ export const ItemList = () => {
     useFilteredItems();
 
   return (
-    <div className="container">
+    <section>
       <FilterItems
         showFilteredItems={showFilteredItems}
         hideFilteredItems={hideFilteredItems}
       />
-
+      <h1>{isFilteredItemsShow ? 'Filtered items' : 'All items'}</h1>
       {isFilteredItemsShow
-        ? filteredItems && (
-            <div className="cards">
-              {filteredItems?.map((item) => (
-                <div key={item.id}>
-                  {item.brand + item.price + item.product}{' '}
-                </div>
-              ))}
-            </div>
-          )
+        ? filteredItems && <Table items={filteredItems} />
         : items && (
             <>
-              <div className="cards">
-                {items?.map((item) => (
-                  <div key={item.id}>
-                    <Card card={item} />
-                  </div>
-                ))}
-              </div>
-              <div className="nav btn-container">
-                <button onClick={() => decrementPage()} disabled={page === 1}>
+              <Table items={items} />
+              <div>
+                <button onClick={() => decrementPage()} disabled={page === 0}>
                   Prev Page
                 </button>
                 <button onClick={() => incrementPage()}>Next Page</button>
               </div>
             </>
           )}
-
       <div>{isItemsLoading ? 'Fetching items...' : null}</div>
       <div>{isFilteredItemsLoading ? 'Fetching filtered items...' : null}</div>
-    </div>
+    </section>
   );
 };

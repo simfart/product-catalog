@@ -1,18 +1,16 @@
-import { useQuery } from "react-query";
-import { getIds } from "../../shared/api";
+import { useQuery } from 'react-query';
+import { getIds } from '../../shared/api';
 
 export const useInitialds = (page) => {
   return useQuery(
-    { queryKey: ["ids", page] },
+    { queryKey: ['ids', page] },
     async () => {
       const dataIds = getIds(page);
       return dataIds;
     },
     {
       retry: 3,
-      onError: (error) => {
-        console.log(error);
-      },
-    }
+      retryDelay: (attempt) => Math.pow(2, attempt) * 1000,
+    },
   );
 };

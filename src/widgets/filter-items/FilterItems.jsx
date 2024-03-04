@@ -3,26 +3,22 @@ import { useForm, useFilteredItems, useGetFields } from '../../entities/hooks';
 import { DropdownFilter } from '../dropdown-filter';
 import { RadioButton } from '../../shared/radio-button';
 
+import './FilterItems.scss';
+
 export const FilterItems = ({ showFilteredItems, hideFilteredItems }) => {
-  const {
-    values,
-    handleChange,
-    setValues,
-    isValid,
-    setIsValid,
-    setErrors,
-    errors,
-  } = useForm({});
+  const { values, handleChange, setValues, isValid, errors, setErrors } =
+    useForm({});
 
   const [filter, setFilter] = useState();
 
   const handleChangeFilter = (event) => {
     setValues({});
+    setErrors({});
     setFilter(event.target.value);
   };
   const isChecked = (value) => filter === value;
 
-  const { fetchFilteredItems, isLoading } = useFilteredItems(values);
+  const { fetchFilteredItems } = useFilteredItems(values);
   const { data } = useGetFields('brand');
   const selectInputRef = useRef();
 
@@ -39,10 +35,10 @@ export const FilterItems = ({ showFilteredItems, hideFilteredItems }) => {
     (e) => {
       e.preventDefault();
       setValues({});
-      selectInputRef.current.value = null;
+      setErrors({});
       hideFilteredItems();
     },
-    [hideFilteredItems, setValues],
+    [hideFilteredItems, setErrors, setValues],
   );
 
   const radioButtons = ['Brand', 'Product', 'Price'];
@@ -69,12 +65,12 @@ export const FilterItems = ({ showFilteredItems, hideFilteredItems }) => {
             </div>
             {filter == 'Brand' && (
               <div>
-                <label htmlFor="brand">Brand </label>
                 <select
                   ref={selectInputRef}
                   name="brand"
                   value={values.brand}
                   onChange={handleChange}
+                  className="filter_input"
                 >
                   <DropdownFilter brandData={data} />
                 </select>
@@ -87,61 +83,46 @@ export const FilterItems = ({ showFilteredItems, hideFilteredItems }) => {
                   onChange={handleChange}
                   id="subheading-input"
                   type="text"
-                  className={`popup__item ${
-                    errors?.product && 'popup__item_error'
-                  }`}
+                  className="filter_input"
                   name="product"
                   minLength="2"
                   maxLength="200"
                   placeholder="product"
                 />
-                <span className="popup__error">{errors.product || ''}</span>
               </>
             )}
 
             {filter == 'Price' && (
               <>
-                {' '}
                 <input
                   value={parseFloat(values.price) || ''}
                   onChange={handleChange}
                   id="subheading-input"
                   type="number"
-                  className={`popup__item ${
-                    errors?.price && 'popup__item_error'
-                  }`}
+                  className="filter_input"
                   name="price"
                   minLength="2"
                   maxLength="200"
                   placeholder="price"
                 />
-                <span className="popup__error">{errors.price || ''}</span>
               </>
             )}
           </fieldset>
-          <button
-            className={`popup__button ${
-              isValid ? '' : 'popup__button_invalid'
-            }`}
-            type="submit"
-            aria-label="Поиск"
-          >
-            Поиск
-          </button>
-          <button
-            className={`popup__button ${
-              isValid ? '' : 'popup__button_invalid'
-            }`}
-            type="button"
-            aria-label="Сбросить фильтр"
-            onClick={onClear}
-          >
-            Очистить
-          </button>
+          <span>{errors.product || ''}</span>
+          <div className="filter__buttons">
+            <button
+              className={`${isValid ? '' : 'button_disabled'}`}
+              type="submit"
+              aria-label="Search"
+            >
+              Search
+            </button>
+            <button type="button" aria-label="Reset" onClick={onClear}>
+              Reset
+            </button>
+          </div>
         </form>
-        <div>{isValid ? '' : 'не валид'}</div>
       </div>
-      <div>{isLoading ? 'Fetching filtered items...' : null}</div>
     </div>
   );
 };

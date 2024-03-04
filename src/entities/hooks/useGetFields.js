@@ -11,9 +11,6 @@ export const useGetFields = (field) => {
     { keepPreviousData: true },
     {
       retry: 3,
-      onError: (error) => {
-        console.log(error);
-      },
     },
   );
 };

@@ -1,7 +1,5 @@
 import { useMemo } from 'react';
 
-import './DropdownFilter.scss';
-
 export const DropdownFilter = ({ brandData }) => {
   const brandFields = useMemo(() => {
     if (brandData) {
@@ -15,5 +13,10 @@ export const DropdownFilter = ({ brandData }) => {
     }
   }, [brandData]);
 
-  return <>{brandFields}</>;
+  return (
+    <>
+      <option value={null}></option>
+      {brandFields}
+    </>
+  );
 };

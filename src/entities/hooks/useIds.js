@@ -14,9 +14,7 @@ export const useIds = () => {
     },
     {
       retry: 3,
-      onError: (error) => {
-        console.log(error);
-      },
+      retryDelay: (attempt) => Math.pow(2, attempt) * 1000,
     },
     { keepPreviousData: true },
   );

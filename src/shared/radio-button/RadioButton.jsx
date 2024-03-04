@@ -1,3 +1,5 @@
+import './RadioButton.scss';
+
 export const RadioButton = ({ id, text, name, onChange, checked, value }) => {
   return (
     <label htmlFor={id} className="radiobutton-label">
@@ -10,7 +12,7 @@ export const RadioButton = ({ id, text, name, onChange, checked, value }) => {
         onChange={onChange}
         checked={checked}
       />
-      <span className="custom-radiobutton" />
+      <span className="radiobutton-span" />
       {text}
     </label>
   );
