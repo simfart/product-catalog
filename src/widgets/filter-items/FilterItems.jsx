@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useForm, useFilteredItems, useGetFields } from '../../entities/hooks';
 import { DropdownFilter } from '../dropdown-filter';
 import { RadioButton } from '../../shared/radio-button';
@@ -6,8 +6,15 @@ import { RadioButton } from '../../shared/radio-button';
 import './FilterItems.scss';
 
 export const FilterItems = ({ showFilteredItems, hideFilteredItems }) => {
-  const { values, handleChange, setValues, isValid, errors, setErrors } =
-    useForm({});
+  const {
+    values,
+    handleChange,
+    setValues,
+    isValid,
+    errors,
+    setErrors,
+    setIsValid,
+  } = useForm({});
 
   const [filter, setFilter] = useState();
 
@@ -27,6 +34,7 @@ export const FilterItems = ({ showFilteredItems, hideFilteredItems }) => {
       e.preventDefault();
       fetchFilteredItems();
       showFilteredItems();
+      document.getElementById('myDropdown').selectedIndex = -1;
     },
     [fetchFilteredItems, showFilteredItems],
   );
@@ -37,10 +45,16 @@ export const FilterItems = ({ showFilteredItems, hideFilteredItems }) => {
       setValues({});
       setErrors({});
       hideFilteredItems();
+      setIsValid(false);
     },
-    [hideFilteredItems, setErrors, setValues],
+    [hideFilteredItems, setErrors, setIsValid, setValues],
   );
 
+  useEffect(() => {
+    if (!values || values == null) {
+      setIsValid(false);
+    }
+  }, [setIsValid, values]);
   const radioButtons = ['Brand', 'Product', 'Price'];
 
   return (
@@ -68,9 +82,10 @@ export const FilterItems = ({ showFilteredItems, hideFilteredItems }) => {
                 <select
                   ref={selectInputRef}
                   name="brand"
-                  value={values.brand}
+                  value={values.brand || ''}
                   onChange={handleChange}
                   className="filter_input"
+                  id="myDropdown"
                 >
                   <DropdownFilter brandData={data} />
                 </select>

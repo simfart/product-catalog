@@ -15,7 +15,9 @@ export const DropdownFilter = ({ brandData }) => {
 
   return (
     <>
-      <option value={null}></option>
+      <option disabled defaultValue={null}>
+        {' '}
+      </option>
       {brandFields}
     </>
   );
